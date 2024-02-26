@@ -58,7 +58,7 @@ export const lang = {
     "Time": "وقت",
     "Date": "تاريخ",
     "Hub": "فرع",
-    "cancelled": "تم إلغاءالشحنه" ,
+    "cancelled": "تم إلغاء الشحنه" ,
     "delivered": "تم التوصيل",
     "Tanta Hub": "فرع طنطا",
     "Shipment Address": "عنوان التسليم",
