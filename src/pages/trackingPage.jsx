@@ -55,7 +55,7 @@ function TrackingPage() {
   useEffect(() => {
     getShipmentCall();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [shipmentNo]);
 
   return (
     <Box
