@@ -28,7 +28,11 @@ export const lang = {
     "delivered": "delivered",
     "Tanta Hub": "Tanta Hub",
     "Shipment Address": "Shipment Address",
-    "Contact support": "Is there a problem with your shipment ?"
+    "Contact support": "Is there a problem with your shipment ?",
+    "Retry delivery - the customer is not in the address.": "Retry delivery - the customer is not in the address.",
+    "Postponed - the customer requested postponement for another day.": "Postponed - the customer requested postponement for another day.",
+    "Customer is not answering.": "Customer is not answering.",
+    "تأجيل - العميل طلب التاجيل ليوم اخر": "Postponed - the customer requested postponement for another day."
 
 
 
@@ -62,6 +66,10 @@ export const lang = {
     "delivered": "تم التوصيل",
     "Tanta Hub": "فرع طنطا",
     "Shipment Address": "عنوان التسليم",
-    "Contact support": "هل يوجد اي مشكله في شحنتك ؟"
+    "Contact support": "هل يوجد اي مشكله في شحنتك ؟",
+    "Retry delivery - the customer is not in the address.": "أعد محاولة التسليم - العميل ليس في العنوان.",
+    "Postponed - the customer requested postponement for another day.": "التأجيل - طلب العميل التأجيل ليوم آخر.",
+    "Customer is not answering.": "العميل لا يجيب",
+    "تأجيل - العميل طلب التاجيل ليوم اخر":"تأجيل - العميل طلب التاجيل ليوم اخر"
   },
 };

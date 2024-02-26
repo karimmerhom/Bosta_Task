@@ -110,7 +110,7 @@ function TrackingPage() {
                   borderStyle={"solid"}
                   borderRadius={10}
                 >
-                  <Table>
+                  <Table >
                     <Thead>
                       <Tr>
                         <Th
@@ -203,7 +203,12 @@ function TrackingPage() {
                               textAlign={"start"}
                               px={20}
                             >
+                              <Box display={'flex'} flexDir={'column'}>
                               {lang[language][concatenatedString]}{" "}
+                              </Box>
+                              <Text color={'text.80'} fontSize={12}>
+                              {event.reason &&  lang[language][event.reason ] }
+                              </Text>
                             </Td>
                           </Tr>
                         );
