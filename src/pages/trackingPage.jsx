@@ -204,7 +204,7 @@ function TrackingPage() {
                               px={20}
                             >
                               <Box display={'flex'} flexDir={'column'}>
-                              {lang[language][concatenatedString]}{" "}
+                              {lang[language][concatenatedString]}
                               </Box>
                               <Text color={'text.80'} fontSize={12}>
                               {event.reason &&  lang[language][event.reason ] }
