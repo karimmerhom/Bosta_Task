@@ -135,7 +135,7 @@ function NavBar() {
         alignItems={"center"}
         flex={isNonMobile ? 0.6 : 0.4}
       >
-        <Box>{language === "eng" ? <EnglishLogo /> : <ArabicLogo />}</Box>
+        <Box onClick={()=>navigate(`/`)} cursor={'pointer'}>{language === "eng" ?<EnglishLogo /> : <ArabicLogo />}</Box>
         <Box
           display={isNonMobile ? "flex" : "none"}
           gap={28}
@@ -201,6 +201,7 @@ function NavBar() {
             borderWidth={3}
             borderStyle={"solid"}
             borderColor={"border.100"}
+            zIndex={2}
           >
             <MenuItem
               py={5}
