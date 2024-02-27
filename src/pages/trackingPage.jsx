@@ -146,13 +146,13 @@ function TrackingPage() {
 
               <Box><TimeSeries /></Box>
 
-              <Box justifyContent={'space-evenly'} display={'flex'} flexWrap={'wrap'} flexDir={isNonMobile ? "row" : "column"}>
+              <Box justifyContent={'space-evenly'} gap={isNonMobile ? 0 : 50} w={"100%"} display={'flex'}  flexWrap={isNonMobile ? 'wrap' : 'unset'} flexDir={isNonMobile ? "row" : "column"}>
                 <Box>
                   <Text fontWeight={"bold"} fontSize={25} pl={5} mb={20}>
                     {lang[language]["Shipment Details"]}
                   </Text>
                   <TableContainer
-                    w={"fit-content"}
+                    w={ "fit-content" }
                     borderWidth={3}
                     borderColor={"border.100"}
                     borderStyle={"solid"}
