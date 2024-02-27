@@ -74,7 +74,7 @@ function TrackingPage() {
       index: complete ? shipment.TransitEvents.length : 1,
       count: shipment.TransitEvents.length,
     })
-
+      
     return (
       <Stepper flexDir={'column'} display={'flex'} alignItems={'center'} justifyContent={'center'} index={activeStep}>
         {shipment.TransitEvents.map((event, index) => (
@@ -87,7 +87,8 @@ function TrackingPage() {
               />
             </StepIndicator>
 
-            <Box my={20}>
+            <Box my={20} display={'flex'} flexDir={'column'} alignItems={'center'}>
+            <StepTitle>{new Date(event.timestamp.slice(0, -1)).toLocaleDateString("en-US")+"  "+new Date(event.timestamp.slice(0, -1)).toLocaleTimeString()}</StepTitle>
               <StepTitle>{lang[language][event.state.split("_").join(" ").toLowerCase()]}</StepTitle>
               <StepDescription color={'text.80'}>  {event.reason && lang[language][event.reason]} </StepDescription>
             </Box>
