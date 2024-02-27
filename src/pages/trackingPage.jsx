@@ -12,8 +12,18 @@ import {
   Td,
   Text,
   TableContainer,
+  Step,
+  StepDescription,
+  StepIcon,
+  StepIndicator,
+  StepNumber,
+  StepSeparator,
+  StepStatus,
+  StepTitle,
+  Stepper,
+  useSteps,
 } from "@chakra-ui/react";
-
+import { TimeIcon } from '@chakra-ui/icons'
 import { useParams } from "react-router-dom";
 import { getShimpment } from "../api/api";
 import NotFound from "../assets/notFound.jpg";
@@ -29,6 +39,17 @@ function TrackingPage() {
   const [shipment, setShimpent] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const language = useSelector((state) => state.language.language);
+
+  const steps = [
+    { title: "First", description: "Contact Info" },
+    { title: "Second", description: "Date & Time" },
+    { title: "Third", description: "Select Rooms" },
+  ];
+
+  const { activeStep } = useSteps({
+    index: 1,
+    count: steps.length,
+  });
 
   const getShipmentCall = () => {
     getShimpment(shipmentNo)
@@ -56,6 +77,39 @@ function TrackingPage() {
     getShipmentCall();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shipmentNo]);
+
+
+  function Example() {
+    const { activeStep } = useSteps({
+      index: 1,
+      count: steps.length,
+    })
+  
+    return (
+      <Stepper flexDir={'column'} display={'flex'} alignItems={'center'} justifyContent={'center'} index={activeStep}>
+        {steps.map((step, index) => (
+          <Step display={'flex'} alignItems={'center'} justifyContent={'center'} flexDir={'column'} key={index}>
+            <StepIndicator boxShadow={"5px 4px 15px 1px rgba(0,0,0,0.2)"} display={'flex'} alignItems={'center'} justifyContent={'center'} w={50} h={50} borderRadius={50} color={"white"} bg={"icon.80"} >
+              <StepStatus
+                complete={<StepIcon w={30} h={30}/>}
+                incomplete={<Box bg='white' w={40} h={40} borderRadius={40}/>}
+                active={<TimeIcon w={30} h={30}/>}
+              />
+            </StepIndicator>
+  
+            <Box flexShrink='0'>
+              <StepTitle>{step.title}</StepTitle>
+              <StepDescription>{step.description}</StepDescription>
+            </Box>
+  
+            <StepSeparator w={5} h={100} bg={"icon.80"} mb={30}/>
+          </Step>
+        ))}
+      </Stepper>
+    )
+  }
+
+
 
   return (
     <Box
@@ -96,9 +150,34 @@ function TrackingPage() {
               w={"100%"}
               px={50}
               display={"flex"}
+              flexDirection={"column"}
               gap={50}
-              flexDir={isNonMobile ? "row" : "column"}
             >
+              {/* <Box >
+              <Stepper size='lg' colorScheme='red' index={activeStep}>
+      {steps.map((step, index) => (
+        <Step key={index} >
+          <StepIndicator>
+            <StepStatus
+              complete={<StepIcon />}
+              incomplete={<StepNumber />}
+              active={<StepNumber />}
+            />
+          </StepIndicator>
+
+          <Box flexShrink='0'>
+            <StepTitle>{step.title}</StepTitle>
+            <StepDescription>{step.description}</StepDescription>
+          </Box>
+
+          <StepSeparator />
+        </Step>
+      ))}
+    </Stepper>
+              </Box> */}
+<Box><Example></Example></Box>
+              
+              <Box justifyContent={'space-evenly'}  display={'flex'} flexWrap={'wrap'}  flexDir={isNonMobile ? "row" : "column"}>
               <Box>
                 <Text fontWeight={"bold"} fontSize={25} pl={5} mb={20}>
                   {lang[language]["Shipment Details"]}
@@ -110,7 +189,7 @@ function TrackingPage() {
                   borderStyle={"solid"}
                   borderRadius={10}
                 >
-                  <Table >
+                  <Table>
                     <Thead>
                       <Tr>
                         <Th
@@ -203,11 +282,11 @@ function TrackingPage() {
                               textAlign={"start"}
                               px={20}
                             >
-                              <Box display={'flex'} flexDir={'column'}>
-                              {lang[language][concatenatedString]}
+                              <Box display={"flex"} flexDir={"column"}>
+                                {lang[language][concatenatedString]}
                               </Box>
-                              <Text color={'text.80'} fontSize={12}>
-                              {event.reason &&  lang[language][event.reason ] }
+                              <Text color={"text.80"} fontSize={12}>
+                                {event.reason && lang[language][event.reason]}
                               </Text>
                             </Td>
                           </Tr>
@@ -260,6 +339,7 @@ function TrackingPage() {
                     src={SupportImage}
                   />
                 </Box>
+              </Box>
               </Box>
             </Box>
           ) : (
