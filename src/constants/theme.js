@@ -12,6 +12,7 @@ const lightModeColors = {
   icon: {
     100: "#000000",
     80: "#e30613",
+    60: "#5cb85c"
   },
   text: {
     100: "#000000",

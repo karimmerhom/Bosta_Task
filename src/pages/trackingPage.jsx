@@ -16,7 +16,6 @@ import {
   StepDescription,
   StepIcon,
   StepIndicator,
-  StepNumber,
   StepSeparator,
   StepStatus,
   StepTitle,
@@ -40,16 +39,6 @@ function TrackingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const language = useSelector((state) => state.language.language);
 
-  const steps = [
-    { title: "First", description: "Contact Info" },
-    { title: "Second", description: "Date & Time" },
-    { title: "Third", description: "Select Rooms" },
-  ];
-
-  const { activeStep } = useSteps({
-    index: 1,
-    count: steps.length,
-  });
 
   const getShipmentCall = () => {
     getShimpment(shipmentNo)
@@ -79,30 +68,31 @@ function TrackingPage() {
   }, [shipmentNo]);
 
 
-  function Example() {
+  function TimeSeries() {
+    const complete = shipment.TransitEvents[shipment.TransitEvents.length - 1].state === "DELIVERED" || shipment.TransitEvents[shipment.TransitEvents.length - 1].state === "DELIVERED_TO_SENDER" ? true : false
     const { activeStep } = useSteps({
-      index: 1,
-      count: steps.length,
+      index: complete ? shipment.TransitEvents.length : 1,
+      count: shipment.TransitEvents.length,
     })
-  
+
     return (
       <Stepper flexDir={'column'} display={'flex'} alignItems={'center'} justifyContent={'center'} index={activeStep}>
-        {steps.map((step, index) => (
+        {shipment.TransitEvents.map((event, index) => (
           <Step display={'flex'} alignItems={'center'} justifyContent={'center'} flexDir={'column'} key={index}>
-            <StepIndicator boxShadow={"5px 4px 15px 1px rgba(0,0,0,0.2)"} display={'flex'} alignItems={'center'} justifyContent={'center'} w={50} h={50} borderRadius={50} color={"white"} bg={"icon.80"} >
+            <StepIndicator boxShadow={"5px 4px 15px 1px rgba(0,0,0,0.2)"} display={'flex'} alignItems={'center'} justifyContent={'center'} w={50} h={50} borderRadius={50} color={"white"} bg={complete ? "icon.60" : "icon.80"} >
               <StepStatus
-                complete={<StepIcon w={30} h={30}/>}
-                incomplete={<Box bg='white' w={40} h={40} borderRadius={40}/>}
-                active={<TimeIcon w={30} h={30}/>}
+                complete={<StepIcon w={30} h={30} />}
+                incomplete={<Box bg='white' w={40} h={40} borderRadius={40} />}
+                active={<TimeIcon w={30} h={30} />}
               />
             </StepIndicator>
-  
-            <Box flexShrink='0'>
-              <StepTitle>{step.title}</StepTitle>
-              <StepDescription>{step.description}</StepDescription>
+
+            <Box my={20}>
+              <StepTitle>{lang[language][event.state.split("_").join(" ").toLowerCase()]}</StepTitle>
+              <StepDescription color={'text.80'}>  {event.reason && lang[language][event.reason]} </StepDescription>
             </Box>
-  
-            <StepSeparator w={5} h={100} bg={"icon.80"} mb={30}/>
+
+            <StepSeparator w={5} h={100} bg={complete ? "icon.60" : "icon.80"} mb={30} />
           </Step>
         ))}
       </Stepper>
@@ -153,193 +143,172 @@ function TrackingPage() {
               flexDirection={"column"}
               gap={50}
             >
-              {/* <Box >
-              <Stepper size='lg' colorScheme='red' index={activeStep}>
-      {steps.map((step, index) => (
-        <Step key={index} >
-          <StepIndicator>
-            <StepStatus
-              complete={<StepIcon />}
-              incomplete={<StepNumber />}
-              active={<StepNumber />}
-            />
-          </StepIndicator>
 
-          <Box flexShrink='0'>
-            <StepTitle>{step.title}</StepTitle>
-            <StepDescription>{step.description}</StepDescription>
-          </Box>
+              <Box><TimeSeries /></Box>
 
-          <StepSeparator />
-        </Step>
-      ))}
-    </Stepper>
-              </Box> */}
-<Box><Example></Example></Box>
-              
-              <Box justifyContent={'space-evenly'}  display={'flex'} flexWrap={'wrap'}  flexDir={isNonMobile ? "row" : "column"}>
-              <Box>
-                <Text fontWeight={"bold"} fontSize={25} pl={5} mb={20}>
-                  {lang[language]["Shipment Details"]}
-                </Text>
-                <TableContainer
-                  w={"fit-content"}
-                  borderWidth={3}
-                  borderColor={"border.100"}
-                  borderStyle={"solid"}
-                  borderRadius={10}
-                >
-                  <Table>
-                    <Thead>
-                      <Tr>
-                        <Th
-                          bg={"border.100"}
-                          minW={150}
-                          h={60}
-                          alignItems={"center"}
-                          textAlign={"start"}
-                          px={20}
-                        >
-                          {" "}
-                          {lang[language]["Hub"]}
-                        </Th>
-                        <Th
-                          bg={"border.100"}
-                          minW={150}
-                          h={60}
-                          alignItems={"center"}
-                          textAlign={"start"}
-                          px={20}
-                        >
-                          {" "}
-                          {lang[language]["Date"]}
-                        </Th>
-                        <Th
-                          bg={"border.100"}
-                          minW={150}
-                          h={60}
-                          alignItems={"center"}
-                          textAlign={"start"}
-                          px={20}
-                        >
-                          {" "}
-                          {lang[language]["Time"]}
-                        </Th>
-                        <Th
-                          bg={"border.100"}
-                          minW={150}
-                          h={60}
-                          alignItems={"center"}
-                          textAlign={"start"}
-                          px={20}
-                        >
-                          {lang[language]["Details"]}
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {shipment.TransitEvents.map((event) => {
-                        let dateTime = new Date(event.timestamp.slice(0, -1));
-                        let parts = event.state.split("_");
-                        let lowerCaseParts = parts.map((part) =>
-                          part.toLowerCase()
-                        );
-                        let concatenatedString = lowerCaseParts.join(" ");
-
-                        return (
-                          <Tr>
-                            <Td
-                              minW={150}
-                              h={60}
-                              alignItems={"center"}
-                              textAlign={"start"}
-                              px={20}
-                            >
-                              {event.hub ? lang[language][event.hub] : "---"}
-                            </Td>
-                            <Td
-                              minW={150}
-                              h={60}
-                              alignItems={"center"}
-                              textAlign={"start"}
-                              px={20}
-                            >
-                              {dateTime.toLocaleDateString("en-US")}
-                            </Td>
-                            <Td
-                              minW={150}
-                              h={60}
-                              alignItems={"center"}
-                              textAlign={"start"}
-                              px={20}
-                            >
-                              {dateTime.toLocaleTimeString()}
-                            </Td>
-                            <Td
-                              minW={150}
-                              h={60}
-                              alignItems={"center"}
-                              textAlign={"start"}
-                              px={20}
-                            >
-                              <Box display={"flex"} flexDir={"column"}>
-                                {lang[language][concatenatedString]}
-                              </Box>
-                              <Text color={"text.80"} fontSize={12}>
-                                {event.reason && lang[language][event.reason]}
-                              </Text>
-                            </Td>
-                          </Tr>
-                        );
-                      })}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </Box>
-              <Box display={"flex"} flexDir={"column"}>
-                <Text fontWeight={"bold"} fontSize={25} pl={5} mb={20}>
-                  {lang[language]["Shipment Address"]}
-                </Text>
-                <Box
-                  mb={30}
-                  borderWidth={3}
-                  borderColor={"border.100"}
-                  borderStyle={"solid"}
-                  borderRadius={10}
-                  py={20}
-                  px={20}
-                  h={100}
-                  w={isNonMobile ? 400 : "100%"}
-                  display={"flex"}
-                  alignItems={"center"}
-                >
-                  <Text dir={"rtl"}>
-                    امبابه شارع طلعت حرب بجوار البرنس منزل 17 بلوك 20 القاهره
+              <Box justifyContent={'space-evenly'} display={'flex'} flexWrap={'wrap'} flexDir={isNonMobile ? "row" : "column"}>
+                <Box>
+                  <Text fontWeight={"bold"} fontSize={25} pl={5} mb={20}>
+                    {lang[language]["Shipment Details"]}
                   </Text>
-                </Box>
+                  <TableContainer
+                    w={"fit-content"}
+                    borderWidth={3}
+                    borderColor={"border.100"}
+                    borderStyle={"solid"}
+                    borderRadius={10}
+                  >
+                    <Table>
+                      <Thead>
+                        <Tr>
+                          <Th
+                            bg={"border.100"}
+                            minW={150}
+                            h={60}
+                            alignItems={"center"}
+                            textAlign={"start"}
+                            px={20}
+                          >
+                            {" "}
+                            {lang[language]["Hub"]}
+                          </Th>
+                          <Th
+                            bg={"border.100"}
+                            minW={150}
+                            h={60}
+                            alignItems={"center"}
+                            textAlign={"start"}
+                            px={20}
+                          >
+                            {" "}
+                            {lang[language]["Date"]}
+                          </Th>
+                          <Th
+                            bg={"border.100"}
+                            minW={150}
+                            h={60}
+                            alignItems={"center"}
+                            textAlign={"start"}
+                            px={20}
+                          >
+                            {" "}
+                            {lang[language]["Time"]}
+                          </Th>
+                          <Th
+                            bg={"border.100"}
+                            minW={150}
+                            h={60}
+                            alignItems={"center"}
+                            textAlign={"start"}
+                            px={20}
+                          >
+                            {lang[language]["Details"]}
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {shipment.TransitEvents.map((event) => {
+                          let dateTime = new Date(event.timestamp.slice(0, -1));
+                          let parts = event.state.split("_");
+                          let lowerCaseParts = parts.map((part) =>
+                            part.toLowerCase()
+                          );
+                          let concatenatedString = lowerCaseParts.join(" ");
 
-                <Box
-                  display={"flex"}
-                  alignItems={"center"}
-                  borderWidth={3}
-                  borderColor={"border.100"}
-                  borderStyle={"solid"}
-                  borderRadius={10}
-                  py={20}
-                  px={20}
-                  gap={20}
-                  justifyContent={"space-between"}
-                  w={isNonMobile ? 400 : "100%"}
-                >
-                  <Text>{lang[language]["Contact support"]}</Text>
-                  <Image
-                    h={100}
-                    borderBottomLeftRadius={language === "eng" ? 100 : 0}
-                    borderBottomRightRadius={language === "eng" ? 0 : 100}
-                    src={SupportImage}
-                  />
+                          return (
+                            <Tr>
+                              <Td
+                                minW={150}
+                                h={60}
+                                alignItems={"center"}
+                                textAlign={"start"}
+                                px={20}
+                              >
+                                {event.hub ? lang[language][event.hub] : "---"}
+                              </Td>
+                              <Td
+                                minW={150}
+                                h={60}
+                                alignItems={"center"}
+                                textAlign={"start"}
+                                px={20}
+                              >
+                                {dateTime.toLocaleDateString("en-US")}
+                              </Td>
+                              <Td
+                                minW={150}
+                                h={60}
+                                alignItems={"center"}
+                                textAlign={"start"}
+                                px={20}
+                              >
+                                {dateTime.toLocaleTimeString()}
+                              </Td>
+                              <Td
+                                minW={150}
+                                h={60}
+                                alignItems={"center"}
+                                textAlign={"start"}
+                                px={20}
+                              >
+                                <Box display={"flex"} flexDir={"column"}>
+                                  {lang[language][concatenatedString]}
+                                </Box>
+                                <Text color={"text.80"} fontSize={12}>
+                                  {event.reason && lang[language][event.reason]}
+                                </Text>
+                              </Td>
+                            </Tr>
+                          );
+                        })}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
                 </Box>
-              </Box>
+                <Box display={"flex"} flexDir={"column"}>
+                  <Text fontWeight={"bold"} fontSize={25} pl={5} mb={20}>
+                    {lang[language]["Shipment Address"]}
+                  </Text>
+                  <Box
+                    mb={30}
+                    borderWidth={3}
+                    borderColor={"border.100"}
+                    borderStyle={"solid"}
+                    borderRadius={10}
+                    py={20}
+                    px={20}
+                    h={100}
+                    w={isNonMobile ? 400 : "100%"}
+                    display={"flex"}
+                    alignItems={"center"}
+                  >
+                    <Text dir={"rtl"}>
+                      امبابه شارع طلعت حرب بجوار البرنس منزل 17 بلوك 20 القاهره
+                    </Text>
+                  </Box>
+
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    borderWidth={3}
+                    borderColor={"border.100"}
+                    borderStyle={"solid"}
+                    borderRadius={10}
+                    py={20}
+                    px={20}
+                    gap={20}
+                    justifyContent={"space-between"}
+                    w={isNonMobile ? 400 : "100%"}
+                  >
+                    <Text>{lang[language]["Contact support"]}</Text>
+                    <Image
+                      h={100}
+                      borderBottomLeftRadius={language === "eng" ? 100 : 0}
+                      borderBottomRightRadius={language === "eng" ? 0 : 100}
+                      src={SupportImage}
+                    />
+                  </Box>
+                </Box>
               </Box>
             </Box>
           ) : (
