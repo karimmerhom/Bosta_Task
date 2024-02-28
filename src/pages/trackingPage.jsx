@@ -43,10 +43,8 @@ function TrackingPage() {
   const getShipmentCall = () => {
     getShimpment(shipmentNo)
       .then((res) => {
-        console.log("res: ", res);
         setIsLoading(false);
         if (res.status !== 200) {
-          console.log("in");
           toast.error(res.messasge, {
             position: "bottom-center",
           });
